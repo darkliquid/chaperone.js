@@ -8,7 +8,8 @@
 		return this.each(function(){
 			var elem = $(this),
 				body = $('body'),
-				opts = $.extend(options, elem.data());
+				opts = $.extend(options, elem.data()),
+				container;
 
 			if(elem.data('chaperone')) {
 				container = elem.data('chaperone');
@@ -50,8 +51,7 @@
 		nextKey: [39, 40, 13, 32],	// Right arrow | Up arrow | Enter | Space
 		prevKey: [37, 38, 8],		// Left arrow | Down arrow | Backspace
 		closeKey: 27,				// Escape
-		keepInside: true,
 		keepInsideBoundary: document
 	};
 
-})(jQuery);
+}(jQuery));
