@@ -1,6 +1,11 @@
 {
-  "name": "jquery-plugin",
+  "name": "jquery-chaperone",
   "version": "0.0.0-ignored",
+  "author": "Andrew Montgomery-Hurrell <darkliquid@darkliquid.co.uk>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/darkliquid/chaperone.js"
+  },
   "engines": {
     "node": ">= 0.6.0"
   },
@@ -9,5 +14,10 @@
   },
   "devDependencies": {
     "grunt": "~0.3.11"
-  }
+  },
+  "homepage": "https://github.com/darkliquid/chaperone.js"
+  "license": "MIT/GPL",
+  "keywords": ["chaperone", "tour", "jquery", "plugin"],
+  "description": "A simple jQuery plugin for doing guided tours through a website.",
+  "main": "./src/chaperone"
 }
