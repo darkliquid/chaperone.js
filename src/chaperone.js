@@ -9,18 +9,17 @@
 			var elem = $(this),
 				body = $('body'),
 				opts = $.extend(options, elem.data()),
-				container;
+				container = elem.data('chaperone-steps');
 
-			if(elem.data('chaperone')) {
-				container = elem.data('chaperone');
-			} else {
+			if(!container) {
 				container = $('<div class="chaperone-steps"></div>');
-				elem.data('chaperone', container);
+				elem.data('chaperone-steps', container);
 				body.append(container);
 			}
 
-			elem.find(opts.step).each(function(index, step) {
+			elem.find(opts.step).each(function(index, el) {
 				var code = $(opts.template),
+					step = $(el),
 					title = step.attr('data-title'),
 					content = step.html();
 				if(title) {
