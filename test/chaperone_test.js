@@ -24,35 +24,38 @@
 
 	module('jQuery#chaperone', {
 		setup: function() {
-			this.elems = $('#qunit-fixture #chainable').children();
+			this.elems = $('#qunit-fixture ol.tour');
+			this.elems.chaperone();
+		},
+		teardown: function() {
+			// Cleaning up the steps created in the body tag
+			$('.chaperone-steps').remove();
 		}
 	});
 
-	test('is chainable', 1, function() {
+	test('is chainable', function() {
 		// Not a bad test to run on collection methods.
 		strictEqual(this.elems.chaperone(), this.elems, 'should be chainable');
 	});
 
-	module('jQuery#chaperone steps', {
-		setup: function() {
-			this.elems = $('#qunit-fixture #tour');
-		}
+	test('reuses existing steps', function() {
+		this.elems.chaperone().chaperone().chaperone();
+		strictEqual($('.chaperone-steps').length, 1, 'should have only one set of steps');
 	});
 
 	test('creates steps from tour', 4, function() {
-		this.elems.chaperone();
 		strictEqual(
 			$('.chaperone-steps').children().length,
-			this.elems.chaperone().children().length,
+			this.elems.children().length,
 			'should have created the right number of steps'
 		);
 		strictEqual(
-			this.elems.chaperone().find('li:first').data('title'),
+			this.elems.find('li:first').data('title'),
 			$('.chaperone-steps').children().eq(0).find('.title').text(),
 			'should have the right step title set'
 		);
 		strictEqual(
-			this.elems.chaperone().find('li:first').html(),
+			this.elems.find('li:first').html(),
 			$('.chaperone-steps').children().eq(0).find('.content').html(),
 			'should have the right step content set'
 		);
@@ -62,5 +65,15 @@
 			'should have no title block when no title set'
 		);
 	});
+
+	test('start', function() {
+		this.elems.chaperone('start');
+		var tour2 = $('ol.another-tour');
+		tour2.chaperone().chaperone('start');
+		ok(tour2.data('chaperone').container.children().eq(0).is(':visible'), 'first step should be visible');
+		ok(this.elems.data('chaperone').container.is(':hidden'), 'should hide other active chaperones');
+	});
+
+
 
 }(jQuery));
