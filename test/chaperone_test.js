@@ -43,7 +43,7 @@
 		strictEqual($('.chaperone-steps').length, 1, 'should have only one set of steps');
 	});
 
-	test('creates steps from tour', 4, function() {
+	test('creates steps from tour', function() {
 		strictEqual(
 			$('.chaperone-steps').children().length,
 			this.elems.children().length,
@@ -66,14 +66,138 @@
 		);
 	});
 
+	test('marks element/tour as chaperoned', function() {
+		ok(this.elems.hasClass('chaperoned'), 'should have chaperoned class');
+	});
+
+	test('hides tour', function() {
+		ok(this.elems.is(':hidden'), 'should have hidden tour base element');
+	});
+
 	test('start', function() {
 		this.elems.chaperone('start');
 		var tour2 = $('ol.another-tour');
 		tour2.chaperone().chaperone('start');
-		ok(tour2.data('chaperone').container.children().eq(0).is(':visible'), 'first step should be visible');
 		ok(this.elems.data('chaperone').container.is(':hidden'), 'should hide other active chaperones');
+		ok(tour2.data('chaperone').container.children().eq(0).is(':visible'), 'first step should be visible');
 	});
 
+	test('stop', function() {
+		this.elems.chaperone('start').chaperone('stop');
+		ok(this.elems.data('chaperone').container.is(':hidden'), 'should hide chaperone');
+	});
 
+	test('destroy', function() {
+		this.elems.chaperone('destroy');
+		strictEqual($('.chaperone-steps').length, 0, 'should remove associated steps');
+		strictEqual(this.elems.data('chaperone'), undefined, 'should remove data from chaperoned element');
+		ok(!this.elems.hasClass('chaperoned'), 'chaperoned element should not have chaperoned class');
+		ok(this.elems.is(':visible'), 'chaperoned element should be visible');
+	});
+
+	test('next', 3, function() {
+		var elems = this.elems;
+		this.elems.chaperone('start');
+		this.elems.one('showstep.chaperone', function(event, step) {
+			strictEqual(step, elems.data('chaperone').container.children().get(1), 'should fire showstep for the next step');
+		});
+		this.elems.one('hidestep.chaperone', function(event, step) {
+			strictEqual(step, elems.data('chaperone').container.children().get(0), 'should fire hidestep for the current step');
+		});
+		this.elems.chaperone('next');
+		ok(this.elems.data('chaperone').container.children().eq(1).is(':visible'), 'second step should be visible');
+	});
+
+	test('prev', function() {
+		var elems = this.elems;
+		this.elems.chaperone('start');
+		this.elems.one('showstep.chaperone', function(event, step) {
+			strictEqual(step, elems.data('chaperone').container.children().get(3), 'should fire showstep for the prev step');
+		});
+		this.elems.one('hidestep.chaperone', function(event, step) {
+			strictEqual(step, elems.data('chaperone').container.children().get(0), 'should fire hidestep for the current step');
+		});
+		this.elems.chaperone('prev');
+		ok(this.elems.data('chaperone').container.children().eq(3).is(':visible'), 'last step should be visible');
+	});
+
+	module('jQuery#chaperone positioning', {
+		setup: function() {
+			this.elems = $('#qunit-fixture ol.tour');
+			this.elems.chaperone();
+			this.elems.chaperone('start');
+		},
+		teardown: function() {
+			// Cleaning up the steps created in the body tag
+			$('.chaperone-steps').remove();
+		}
+	});
+
+	/*test('start', function() {
+		deepEqual(
+			this.elems.data('chaperone').container.children().first().position(),
+			{},
+			'should position first step by it\'s target'
+		);
+	});*/
+
+	module('jQuery#chaperone events', {
+		setup: function() {
+			this.elems = $('#qunit-fixture ol.tour');
+			this.elems.chaperone();
+		},
+		teardown: function() {
+			// Cleaning up the steps created in the body tag
+			$('.chaperone-steps').remove();
+		}
+	});
+
+	test('started', 1, function() {
+		this.elems.one('started.chaperone', function() {
+			ok(true, 'should fire started event on start');
+		});
+		this.elems.chaperone('start');
+	});
+
+	test('showstep', 4, function() {
+		var elems = this.elems;
+		this.elems.one('showstep.chaperone', function(event, step) {
+			ok(true, 'should fire showstep event on start');
+			strictEqual(step, elems.data('chaperone').container.children().get(0), 'should pass step element as second argument');
+		});
+		this.elems.chaperone('start');
+		this.elems.one('showstep.chaperone', function(event, step) {
+			ok(true, 'should fire showstep event on next');
+			strictEqual(step, elems.data('chaperone').container.children().get(1), 'should pass next step element as second argument');
+		});
+		this.elems.chaperone('next');
+	});
+
+	test('hidestep', 2, function() {
+		var elems = this.elems;
+		this.elems.one('hidestep.chaperone', function(event, step) {
+			ok(true, 'should fire hidestep event on prev');
+			strictEqual(step, elems.data('chaperone').container.children().get(0), 'should pass current step element as second argument');
+		});
+		this.elems.chaperone('start').chaperone('prev');
+	});
+
+	test('destroyed', 1, function() {
+		this.elems.on('destroyed.chaperone', function() {
+			ok(true, 'should fire destroyed event on destroy');
+		});
+		this.elems.chaperone('destroy');
+	});
+
+	module('jQuery#chaperone options', {
+		setup: function() {
+			this.elems = $('#qunit-fixture ol.tour');
+			this.elems.chaperone();
+		},
+		teardown: function() {
+			// Cleaning up the steps created in the body tag
+			$('.chaperone-steps').remove();
+		}
+	});
 
 }(jQuery));
