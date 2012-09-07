@@ -1,4 +1,4 @@
-/*global QUnit:false, module:false, test:false, asyncTest:false, expect:false*/
+/*global console:false, QUnit:false, module:false, test:false, asyncTest:false, expect:false*/
 /*global start:false, stop:false ok:false, equal:false, notEqual:false, deepEqual:false*/
 /*global notDeepEqual:false, strictEqual:false, notStrictEqual:false, raises:false*/
 (function($) {
@@ -121,6 +121,7 @@
 		ok(this.elems.data('chaperone').container.children().eq(3).is(':visible'), 'last step should be visible');
 	});
 
+	/*
 	module('jQuery#chaperone positioning', {
 		setup: function() {
 			this.elems = $('#qunit-fixture ol.tour');
@@ -133,13 +134,14 @@
 		}
 	});
 
-	/*test('start', function() {
+	test('start', function() {
 		deepEqual(
-			this.elems.data('chaperone').container.children().first().position(),
+			this.elems.data('chaperone').container.children().first().offset(),
 			{},
 			'should position first step by it\'s target'
 		);
-	});*/
+	});
+	*/
 
 	module('jQuery#chaperone events', {
 		setup: function() {
@@ -187,6 +189,55 @@
 			ok(true, 'should fire destroyed event on destroy');
 		});
 		this.elems.chaperone('destroy');
+	});
+
+	module('jQuery#chaperone steps', {
+		setup: function() {
+			this.elems = $('#qunit-fixture ol.tour');
+			this.elems.chaperone().chaperone('start');
+		},
+		teardown: function() {
+			// Cleaning up the steps created in the body tag
+			$('.chaperone-steps').remove();
+		}
+	});
+
+	test('clicking next', 2, function() {
+		var elems = this.elems,
+			step = elems.data('chaperone').container.children().eq(0),
+			next = elems.data('chaperone').container.children().get(1);
+		elems.one('hidestep.chaperone', function(event, el) {
+			ok(el === step.get(0), 'should hide current chaperone');
+		});
+		elems.one('showstep.chaperone', function(event, el) {
+			ok(el === next, 'should show next chaperone');
+		});
+		step.find('.next-chaperone').click();
+	});
+
+	test('clicking prev', 2, function() {
+		var elems = this.elems,
+			step = elems.data('chaperone').container.children().eq(0),
+			prev = elems.data('chaperone').container.children().get(3);
+		elems.one('hidestep.chaperone', function(event, el) {
+			ok(el === step.get(0), 'should hide current chaperone');
+		});
+		elems.one('showstep.chaperone', function(event, el) {
+			ok(el === prev, 'should show next chaperone');
+		});
+		step.find('.prev-chaperone').click();
+	});
+
+	test('clicking close', 2, function() {
+		var elems = this.elems,
+			step = elems.data('chaperone').container.children().eq(0);
+		elems.one('hidestep.chaperone', function(event, el) {
+			ok(el === step.get(0), 'should hide current chaperone');
+		});
+		elems.one('stopped.chaperone', function(event, el) {
+			ok(true, 'should stop chaperone');
+		});
+		step.find('.close-chaperone').click();
 	});
 
 	module('jQuery#chaperone options', {

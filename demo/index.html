@@ -58,6 +58,13 @@
     .highlight ol.linenums {
       margin-left: 0;
     }
+
+    #demo1a,
+    #demo1b,
+    #demo1c {
+      background: #eee;
+      border-radius: 6px;
+    }
   </style>
 
   <!-- Chaperone stuff. -->
@@ -112,14 +119,20 @@
                 &lt;li data-title=&quot;Second&quot;&gt;Step 2&lt;/li&gt;
                 &lt;li data-title=&quot;Third&quot;&gt;Step 3&lt;/li&gt;
               &lt;/ol&gt;
+
+              &lt;h2 id=&quot;demo1a&quot;&gt;A&lt;/h2&gt;
+              &lt;h2 id=&quot;demo1b&quot;&gt;B&lt;/h2&gt;
+              &lt;h2 id=&quot;demo1c&quot;&gt;C&lt;/h2&gt;
             </pre>
           </div>
 
           <div class="span6">
             <h2>Javascript</h2>
             <pre class="highlight">
-              $('#demo1').chaperone();
-              $('#demo1').chaperone('start');
+              $(function(){
+                $('#demo1').chaperone();
+                $('#demo1').chaperone('start');
+              });
             </pre>
           </div>
         </div>
@@ -131,10 +144,6 @@
             <li data-target="#demo1b" data-title="Second">Step 2</li>
             <li data-target="#demo1c" data-title="Third">Step 3</li>
           </ol>
-          <script>
-            $('#demo1').chaperone();
-            $('#demo1').chaperone('start');
-          </script>
           <div class="row">
             <div class="span4">
               <h2 id="demo1a">A</h2>
@@ -146,6 +155,12 @@
               <h2 id="demo1c">C</h2>
             </div>
           </div>
+          <script>
+            $(function(){
+              $('#demo1').chaperone();
+              $('#demo1').chaperone('start');
+            });
+          </script>
         </div>
       </div>
     </div>

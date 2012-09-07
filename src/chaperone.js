@@ -1,3 +1,4 @@
+/*global console:false */
 (function($, undefined) {
 
 	function calculatePosition(elem, step) {
@@ -13,7 +14,7 @@
 
 		// If no target element, display near the mouse instead
 		if(target) {
-			var el = $(target),
+			var el = $(''+target),
 				offset = $.extend(
 					el.offset() || { top: 0, left: 0 },
 					{
@@ -22,37 +23,85 @@
 					}
 				),
 				stepW = step.width(),
-				stepH = step.height();
+				stepH = step.height(),
+				hCenter = ((stepW + options.margin * 2) - offset.width),
+				vCenter = ((stepH + options.margin * 2) - offset.height);
+				console.log('hCenter: ' + hCenter);
+				console.log('vCenter: ' + vCenter);
 
-			// We can put it above and center
-			if(offset.top - stepH - options.margin > boundary.top) {
-				step.css('top', offset.top - stepH - options.margin);
-				
+			switch(step.data('placement')) {
+				case 'top':
+					step.css('top', offset.top - stepH - options.margin);
+					if(offset.left - hCenter > boundary.left) {
+						step.css('left', (offset.left - hCenter / 2) + options.margin);
+					} else {
+						step.css('left', boundary.left + options.margin);
+					}
+				break;
+
+				case 'bottom':
+					step.css('top', offset.top + offset.height + options.margin);
+					if(offset.left - hCenter > boundary.left) {
+						step.css('left', (offset.left - hCenter / 2) + options.margin);
+					} else {
+						step.css('left', boundary.left + options.margin);
+					}
+				break;
+
+				case 'left':
+					step.css('left', offset.left - stepW - options.margin);
+					if(offset.top - vCenter > boundary.top) {
+						step.css('top', (offset.top - vCenter / 2) + options.margin);
+					} else {
+						step.css('top', boundary.top + options.margin);
+					}
+				break;
+
+				case 'right':
+					step.css('left', offset.left + offset.width + options.margin);
+					if(offset.top - vCenter > boundary.top) {
+						step.css('top', (offset.top - vCenter / 2) + options.margin);
+					} else {
+						step.css('top', boundary.top + options.margin);
+					}
+				break;
+
+				default:
+					// Above
+					if(offset.top - (stepH + options.margin) > boundary.top) {
+						step.css('top', offset.top - (stepH + options.margin));
+					// Below
+					} else if(offset.top + offset.height + stepH + options.margin < boundary.top + boundary.height) {
+						step.css('top', offset.top + offset.height + options.margin);
+					// Centered against target
+					} else if(offset.top - vCenter > boundary.top) {
+						step.css('top', (offset.top - vCenter / 2) + options.margin);
+					// Fallback to boundary limit
+					} else {
+						step.css('top', boundary.top + options.margin);
+					}
+
+					// Can we center it?
+					if(stepW < offset.width || offset.left - hCenter > boundary.left) {
+						step.css('left', (offset.left - hCenter / 2) + options.margin);
+					// Can it go to the left?
+					} else if(offset.left - (stepW + options.margin) > boundary.left) {
+						step.css('left', offset.left - (stepW + options.margin));
+					// To the right?
+					} else if(offset.left + offset.width + stepW + options.margin < boundary.left + boundary.width) {
+						step.css('left', offset.left + offset.width + options.margin);
+					// Fallback to boundary limit
+					} else {
+						step.css('left', boundary.left + options.margin);
+					}
+					
+				break;
 			}
-
-			// We can put it left
-			if(offset.left - stepW - options.margin > boundary.left) {
-				step.css('left', offset.left - stepW - options.margin);
-			}
-
-			// Can't put right
-			if(offset.left + offset.width + stepW + options.margin > boundary.left + boundary.width) {
-				//horizontalMode++;
-			}
-
-			// Can't put above
-			
-
-			// Can't put below
-			if(offset.top + offset.height + stepH + options.margin > boundary.top + boundary.height) {
-				//verticalMode++;
-			}
-
-
 		}
 	}
 
 	function showStep(elem, step) {
+		calculatePosition(elem, step);
 		step.show();
 		elem.trigger('showstep.chaperone', [step.get(0)]);
 	}
@@ -85,17 +134,21 @@
 					elem.find(settings.step).each(function(index, el) {
 						var code = $(settings.template),
 							step = $(el),
-							title = step.attr('data-title'),
+							data = $.extend({}, settings.steps, step.data()),
 							content = step.html();
-						if(title) {
-							code.find('.title').html(title);
+						if(data.title) {
+							code.find('.title').html(data.title);
 						} else {
 							code.find('.title').remove();
 						}
 						code.find('.content').html(content);
 						code.hide();
+						code.data(data);
 						settings.container.append(code);
 					});
+					settings.container.on('click.chaperone', '.next-chaperone', function() { elem.chaperone('next'); });
+					settings.container.on('click.chaperone', '.prev-chaperone', function() { elem.chaperone('prev'); });
+					settings.container.on('click.chaperone', '.close-chaperone', function() { elem.chaperone('stop'); });
 				}
 			});
 		},
@@ -207,6 +260,9 @@
 
 	$.fn.chaperone.defaults = {
 		step: 'li',
+		steps: {
+			placement: 'auto'
+		},
 		animate: true,
 		margin: 10,
 		template: [
