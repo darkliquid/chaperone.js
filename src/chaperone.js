@@ -29,8 +29,11 @@
 				console.log('hCenter: ' + hCenter);
 				console.log('vCenter: ' + vCenter);
 
+			step.removeClass('top').removeClass('bottom').removeClass('left').removeClass('right');
+
 			switch(step.data('placement')) {
 				case 'top':
+					step.addClass('top');
 					step.css('top', offset.top - stepH - options.margin);
 					if(offset.left - hCenter > boundary.left) {
 						step.css('left', (offset.left - hCenter / 2) + options.margin);
@@ -40,6 +43,7 @@
 				break;
 
 				case 'bottom':
+					step.addClass('bottom');
 					step.css('top', offset.top + offset.height + options.margin);
 					if(offset.left - hCenter > boundary.left) {
 						step.css('left', (offset.left - hCenter / 2) + options.margin);
@@ -49,6 +53,7 @@
 				break;
 
 				case 'left':
+					step.addClass('left');
 					step.css('left', offset.left - stepW - options.margin);
 					if(offset.top - vCenter > boundary.top) {
 						step.css('top', (offset.top - vCenter / 2) + options.margin);
@@ -58,6 +63,7 @@
 				break;
 
 				case 'right':
+					step.addClass('right');
 					step.css('left', offset.left + offset.width + options.margin);
 					if(offset.top - vCenter > boundary.top) {
 						step.css('top', (offset.top - vCenter / 2) + options.margin);
@@ -67,12 +73,17 @@
 				break;
 
 				default:
+					var arrowSet = false;
 					// Above
 					if(offset.top - (stepH + options.margin) > boundary.top) {
 						step.css('top', offset.top - (stepH + options.margin));
+						step.addClass('top');
+						arrowSet = true;
 					// Below
 					} else if(offset.top + offset.height + stepH + options.margin < boundary.top + boundary.height) {
 						step.css('top', offset.top + offset.height + options.margin);
+						step.addClass('bottom');
+						arrowSet = true;
 					// Centered against target
 					} else if(offset.top - vCenter > boundary.top) {
 						step.css('top', (offset.top - vCenter / 2) + options.margin);
@@ -87,9 +98,15 @@
 					// Can it go to the left?
 					} else if(offset.left - (stepW + options.margin) > boundary.left) {
 						step.css('left', offset.left - (stepW + options.margin));
+						if(!arrowSet) {
+							step.addClass('left');
+						}
 					// To the right?
-					} else if(offset.left + offset.width + stepW + options.margin < boundary.left + boundary.width) {
-						step.css('left', offset.left + offset.width + options.margin);
+					//} else if(offset.left + offset.width + stepW + options.margin < boundary.left + boundary.width) {
+					//	step.css('left', offset.left + offset.width + options.margin);
+					//	if(!arrowSet) {
+					//		step.addClass('left');
+					//	}
 					// Fallback to boundary limit
 					} else {
 						step.css('left', boundary.left + options.margin);
@@ -103,6 +120,12 @@
 	function showStep(elem, step) {
 		calculatePosition(elem, step);
 		step.show();
+		if(elem.data('chaperone').animate) {
+			$("html, body").animate({
+				scrollTop: step.offset().top - $(window).height() / 2,
+				scrollLeft: step.offset().left - $(window).width() / 2
+			});
+		}
 		elem.trigger('showstep.chaperone', [step.get(0)]);
 	}
 
@@ -267,12 +290,13 @@
 		margin: 10,
 		template: [
 			'<div class="chaperone">',
+				'<div class="arrow"></div>',
 				'<a class="close-chaperone">&times;</a>',
 				'<div class="content-wrapper">',
 					'<h4 class="title">Title</h4>',
 					'<div class="content">Content</div>',
-					'<a class="prev-chaperone">&laquo; Previous</a>',
-					'<a class="next-chaperone">Next &raquo;</a>',
+					'<a class="prev-chaperone">Previous</a>',
+					'<a class="next-chaperone">Next</a>',
 				'</div>',
 			'</div>'
 		].join(''),

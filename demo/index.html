@@ -115,9 +115,15 @@
             <h2>Markup</h2>
             <pre class="highlight">
               &lt;ol id=&quot;demo1&quot;&gt;
-                &lt;li data-target=&quot;&quot; data-title=&quot;First&quot;&gt;Step 1&lt;/li&gt;
-                &lt;li data-title=&quot;Second&quot;&gt;Step 2&lt;/li&gt;
-                &lt;li data-title=&quot;Third&quot;&gt;Step 3&lt;/li&gt;
+                &lt;li data-target=&quot;#demo1a&quot; data-title=&quot;First&quot;&gt;
+                  Step 1
+                &lt;/li&gt;
+                &lt;li data-target=&quot;#demo1b&quot; data-title=&quot;Second&quot;&gt;
+                  Step 2
+                &lt;/li&gt;
+                &lt;li data-target=&quot;#demo1c&quot; data-title=&quot;Third&quot;&gt;
+                  Step 3
+                &lt;/li&gt;
               &lt;/ol&gt;
 
               &lt;h2 id=&quot;demo1a&quot;&gt;A&lt;/h2&gt;
@@ -134,6 +140,9 @@
                 $('#demo1').chaperone('start');
               });
             </pre>
+            <div class="well well-small">
+              If you close the tour, you can start it again by clicking <a href="#" onclick="$('#demo1').chaperone('start'); return false;">here</a>.
+            </div>
           </div>
         </div>
 
