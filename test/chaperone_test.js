@@ -130,32 +130,35 @@
 		},
 		teardown: function() {
 			// Cleaning up the steps created in the body tag
-			//$('.chaperone-steps').remove();
+			this.elems.chaperone('destroy');
 		}
 	});
 
-	test('start', function() {
-		deepEqual(
-			this.elems.data('chaperone').container.children().first().offset(),
-			{},
-			'should position first step by it\'s target'
-		);
+	test('placement = left', function() {
+		var chaperone = this.elems.data('chaperone').container.children().first();
+		ok(chaperone.width() + chaperone.offset().left < $('#target1').offset().left, 'should be positioned left of target');
 	});
 
-	test('on resize', function() {
-		var width = $(window).width(),
-			height = $(window).height(),
-			offset = this.elems.data('chaperone').container.children().first().offset();
-
-		window.resizeTo(300, 300);
-
-		var newOffset = this.elems.data('chaperone').container.children().first().offset();
-
-		window.resizeTo(width, height);
-
-		notDeepEqual(newOffset, offset, 'position should be changed');
+	test('placement = top', function() {
+		this.elems.chaperone('next');
+		var chaperone = this.elems.data('chaperone').container.children().eq(1);
+		ok(chaperone.height() + chaperone.offset().top < $('#target2').offset().top, 'should be positioned above target');
 	});
-	
+
+	test('placement = right', function() {
+		this.elems.chaperone('next');
+		this.elems.chaperone('next');
+		var chaperone = this.elems.data('chaperone').container.children().eq(1);
+		ok(chaperone.offset().left > $('#target3').offset().left + $('#target3').width(), 'should be positioned right of target');
+	});
+
+	test('placement = bottom', function() {
+		this.elems.chaperone('next');
+		this.elems.chaperone('next');
+		this.elems.chaperone('next');
+		var chaperone = this.elems.data('chaperone').container.children().eq(1);
+		ok(chaperone.offset().top > $('#target3').offset().top + $('#target3').height(), 'should be positioned below target');
+	});
 
 	module('jQuery#chaperone events', {
 		setup: function() {
@@ -254,6 +257,7 @@
 		step.find('.close-chaperone').click();
 	});
 
+	/*
 	module('jQuery#chaperone options', {
 		setup: function() {
 			this.elems = $('#qunit-fixture ol.tour');
@@ -264,5 +268,6 @@
 			$('.chaperone-steps').remove();
 		}
 	});
+	*/
 
 }(jQuery));

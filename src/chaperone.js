@@ -32,7 +32,7 @@
 			switch(step.data('placement')) {
 				case 'top':
 					step.addClass('top');
-					step.css('top', offset.top - stepH - options.margin);
+					step.css('top', parseInt(offset.top - stepH - options.margin, 10));
 					if(offset.left - hCenter > boundary.left) {
 						step.css('left', parseInt((offset.left - hCenter / 2) + options.margin, 10));
 					} else {
@@ -42,7 +42,7 @@
 
 				case 'bottom':
 					step.addClass('bottom');
-					step.css('top', offset.top + offset.height + options.margin);
+					step.css('top', parseInt(offset.top + offset.height + options.margin, 10));
 					if(offset.left - hCenter > boundary.left) {
 						step.css('left', parseInt((offset.left - hCenter / 2) + options.margin, 10));
 					} else {
@@ -52,7 +52,7 @@
 
 				case 'left':
 					step.addClass('left');
-					step.css('left', offset.left - stepW - options.margin);
+					step.css('left', parseInt(offset.left - stepW - options.margin, 10));
 					if(offset.top - vCenter > boundary.top) {
 						step.css('top', parseInt((offset.top - vCenter / 2) + options.margin, 10));
 					} else {
@@ -62,7 +62,7 @@
 
 				case 'right':
 					step.addClass('right');
-					step.css('left', offset.left + offset.width + options.margin);
+					step.css('left', parseInt(offset.left + offset.width + options.margin, 10));
 					if(offset.top - vCenter > boundary.top) {
 						step.css('top', parseInt((offset.top - vCenter / 2) + options.margin, 10));
 					} else {
@@ -222,8 +222,13 @@
 		destroy: function() {
 			return this.each(function() {
 				var elem = $(this),
-					settings = elem.data('chaperone'),
-					container = settings.container,
+					settings = elem.data('chaperone');
+
+				if(!settings) {
+					return;
+				}
+
+				var	container = settings.container,
 					currentStep = container.children(':visible');
 
 				// Remove window resize handler if present
