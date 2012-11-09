@@ -180,7 +180,7 @@
 								elem.chaperone('reposition');
 							}, 50);
 						};
-						$(window).on('resize.chaperone', settings._resize);
+						$(window).on('resize', settings._resize);
 					}
 				}
 			});
@@ -232,7 +232,7 @@
 
 				// Remove window resize handler if present
 				if(settings.repositionOnResize) {
-					$(window).off('resize.chaperone', settings._resize);
+					$(window).off('resize', settings._resize);
 				}
 				// Hide current step
 				hideStep(elem, currentStep);
@@ -292,6 +292,7 @@
 					container = settings.container,
 					currentStep = container.children(':visible');
 				calculatePosition(elem, currentStep);
+				elem.trigger('repositioned.chaperone');
 			});
 		}
 

@@ -22,6 +22,8 @@
 			raises(block, [expected], [message])
 	*/
 
+	QUnit.config.testTimeout = 500;
+
 	module('jQuery#chaperone', {
 		setup: function() {
 			this.elems = $('#qunit-fixture ol.tour');
@@ -33,17 +35,17 @@
 		}
 	});
 
-	test('is chainable', function() {
+	test('is chainable', 1, function() {
 		// Not a bad test to run on collection methods.
 		strictEqual(this.elems.chaperone(), this.elems, 'should be chainable');
 	});
 
-	test('reuses existing steps', function() {
+	test('reuses existing steps', 1, function() {
 		this.elems.chaperone().chaperone().chaperone();
 		strictEqual($('.chaperone-steps').length, 1, 'should have only one set of steps');
 	});
 
-	test('creates steps from tour', function() {
+	test('creates steps from tour', 4, function() {
 		strictEqual(
 			$('.chaperone-steps').children().length,
 			this.elems.children().length,
@@ -66,15 +68,15 @@
 		);
 	});
 
-	test('marks element/tour as chaperoned', function() {
+	test('marks element/tour as chaperoned', 1, function() {
 		ok(this.elems.hasClass('chaperoned'), 'should have chaperoned class');
 	});
 
-	test('hides tour', function() {
+	test('hides tour', 1, function() {
 		ok(this.elems.is(':hidden'), 'should have hidden tour base element');
 	});
 
-	test('start', function() {
+	test('start', 2, function() {
 		this.elems.chaperone('start');
 		var tour2 = $('ol.another-tour');
 		tour2.chaperone().chaperone('start');
@@ -82,12 +84,12 @@
 		ok(tour2.data('chaperone').container.children().eq(0).is(':visible'), 'first step should be visible');
 	});
 
-	test('stop', function() {
+	test('stop', 1, function() {
 		this.elems.chaperone('start').chaperone('stop');
 		ok(this.elems.data('chaperone').container.is(':hidden'), 'should hide chaperone');
 	});
 
-	test('destroy', function() {
+	test('destroy', 4, function() {
 		this.elems.chaperone('start');
 		this.elems.chaperone('destroy');
 		strictEqual($('.chaperone-steps').length, 0, 'should remove associated steps');
@@ -109,7 +111,7 @@
 		ok(this.elems.data('chaperone').container.children().eq(1).is(':visible'), 'second step should be visible');
 	});
 
-	test('prev', function() {
+	test('prev', 3, function() {
 		var elems = this.elems;
 		this.elems.chaperone('start');
 		this.elems.one('showstep.chaperone', function(event, step) {
@@ -135,31 +137,42 @@
 		}
 	});
 
-	test('placement = left', function() {
+	test('placement = left', 1, function() {
 		var chaperone = this.elems.data('chaperone').container.children().first();
 		ok(chaperone.width() + chaperone.offset().left < $('#target1').offset().left, 'should be positioned left of target');
 	});
 
-	test('placement = top', function() {
+	test('placement = top', 1, function() {
 		this.elems.chaperone('next');
 		var chaperone = this.elems.data('chaperone').container.children().eq(1);
 		ok(chaperone.height() + chaperone.offset().top < $('#target2').offset().top, 'should be positioned above target');
 	});
 
-	test('placement = right', function() {
+	test('placement = right', 1, function() {
 		this.elems.chaperone('next');
 		this.elems.chaperone('next');
 		var chaperone = this.elems.data('chaperone').container.children().eq(1);
 		ok(chaperone.offset().left > $('#target3').offset().left + $('#target3').width(), 'should be positioned right of target');
 	});
 
-	test('placement = bottom', function() {
+	test('placement = bottom', 1, function() {
 		this.elems.chaperone('next');
 		this.elems.chaperone('next');
 		this.elems.chaperone('next');
 		var chaperone = this.elems.data('chaperone').container.children().eq(1);
 		ok(chaperone.offset().top > $('#target3').offset().top + $('#target3').height(), 'should be positioned below target');
 	});
+
+	/*
+	// For some reason this isn't working, but the code __does__ work, so it's somethign in qunit or something?
+	asyncTest('window resize', 1, function() {
+		this.elems.on('repositioned.chaperone', function() {
+			ok(true, 'should fire get repositioned on window resize');
+			start();
+		});
+		$(window).trigger('resize');
+	});
+	*/
 
 	module('jQuery#chaperone events', {
 		setup: function() {
@@ -207,6 +220,13 @@
 			ok(true, 'should fire destroyed event on destroy');
 		});
 		this.elems.chaperone('destroy');
+	});
+
+	test('repositioned', 1, function() {
+		this.elems.on('repositioned.chaperone', function() {
+			ok(true, 'should fire repositioned event on reposition');
+		});
+		this.elems.chaperone('reposition');
 	});
 
 	module('jQuery#chaperone steps', {
