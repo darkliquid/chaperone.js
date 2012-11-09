@@ -1,4 +1,3 @@
-/*global console:false */
 (function($, undefined) {
 
 	function calculatePosition(elem, step) {

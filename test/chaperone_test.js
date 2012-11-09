@@ -28,7 +28,7 @@
 			this.elems.chaperone();
 		},
 		teardown: function() {
-			// Cleaning up the steps created in the body tag
+			this.elems.chaperone('destroy');
 			$('.chaperone-steps').remove();
 		}
 	});
@@ -88,6 +88,7 @@
 	});
 
 	test('destroy', function() {
+		this.elems.chaperone('start');
 		this.elems.chaperone('destroy');
 		strictEqual($('.chaperone-steps').length, 0, 'should remove associated steps');
 		strictEqual(this.elems.data('chaperone'), undefined, 'should remove data from chaperoned element');
@@ -129,8 +130,8 @@
 			this.elems.chaperone('start');
 		},
 		teardown: function() {
-			// Cleaning up the steps created in the body tag
 			this.elems.chaperone('destroy');
+			$('.chaperone-steps').remove();
 		}
 	});
 
@@ -166,7 +167,7 @@
 			this.elems.chaperone();
 		},
 		teardown: function() {
-			// Cleaning up the steps created in the body tag
+			this.elems.chaperone('destroy');
 			$('.chaperone-steps').remove();
 		}
 	});
@@ -214,7 +215,7 @@
 			this.elems.chaperone().chaperone('start');
 		},
 		teardown: function() {
-			// Cleaning up the steps created in the body tag
+			this.elems.chaperone('destroy');
 			$('.chaperone-steps').remove();
 		}
 	});
