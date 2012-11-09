@@ -26,8 +26,6 @@
 				stepH = step.height(),
 				hCenter = ((stepW + options.margin * 2) - offset.width),
 				vCenter = ((stepH + options.margin * 2) - offset.height);
-				console.log('hCenter: ' + hCenter);
-				console.log('vCenter: ' + vCenter);
 
 			step.removeClass('top').removeClass('bottom').removeClass('left').removeClass('right');
 
@@ -36,9 +34,9 @@
 					step.addClass('top');
 					step.css('top', offset.top - stepH - options.margin);
 					if(offset.left - hCenter > boundary.left) {
-						step.css('left', (offset.left - hCenter / 2) + options.margin);
+						step.css('left', parseInt((offset.left - hCenter / 2) + options.margin, 10));
 					} else {
-						step.css('left', boundary.left + options.margin);
+						step.css('left', parseInt(boundary.left + options.margin, 10));
 					}
 				break;
 
@@ -46,9 +44,9 @@
 					step.addClass('bottom');
 					step.css('top', offset.top + offset.height + options.margin);
 					if(offset.left - hCenter > boundary.left) {
-						step.css('left', (offset.left - hCenter / 2) + options.margin);
+						step.css('left', parseInt((offset.left - hCenter / 2) + options.margin, 10));
 					} else {
-						step.css('left', boundary.left + options.margin);
+						step.css('left', parseInt(boundary.left + options.margin, 10));
 					}
 				break;
 
@@ -56,9 +54,9 @@
 					step.addClass('left');
 					step.css('left', offset.left - stepW - options.margin);
 					if(offset.top - vCenter > boundary.top) {
-						step.css('top', (offset.top - vCenter / 2) + options.margin);
+						step.css('top', parseInt((offset.top - vCenter / 2) + options.margin, 10));
 					} else {
-						step.css('top', boundary.top + options.margin);
+						step.css('top', parseInt(boundary.top + options.margin, 10));
 					}
 				break;
 
@@ -66,9 +64,9 @@
 					step.addClass('right');
 					step.css('left', offset.left + offset.width + options.margin);
 					if(offset.top - vCenter > boundary.top) {
-						step.css('top', (offset.top - vCenter / 2) + options.margin);
+						step.css('top', parseInt((offset.top - vCenter / 2) + options.margin, 10));
 					} else {
-						step.css('top', boundary.top + options.margin);
+						step.css('top', parseInt(boundary.top + options.margin, 10));
 					}
 				break;
 
@@ -76,28 +74,28 @@
 					var arrowSet = false;
 					// Above
 					if(offset.top - (stepH + options.margin) > boundary.top) {
-						step.css('top', offset.top - (stepH + options.margin));
+						step.css('top', parseInt(offset.top - (stepH + options.margin), 10));
 						step.addClass('top');
 						arrowSet = true;
 					// Below
 					} else if(offset.top + offset.height + stepH + options.margin < boundary.top + boundary.height) {
-						step.css('top', offset.top + offset.height + options.margin);
+						step.css('top', parseInt(offset.top + offset.height + options.margin, 10));
 						step.addClass('bottom');
 						arrowSet = true;
 					// Centered against target
 					} else if(offset.top - vCenter > boundary.top) {
-						step.css('top', (offset.top - vCenter / 2) + options.margin);
+						step.css('top', parseInt((offset.top - vCenter / 2) + options.margin, 10));
 					// Fallback to boundary limit
 					} else {
-						step.css('top', boundary.top + options.margin);
+						step.css('top', parseInt(boundary.top + options.margin, 10));
 					}
 
 					// Can we center it?
 					if(stepW < offset.width || offset.left - hCenter > boundary.left) {
-						step.css('left', (offset.left - hCenter / 2) + options.margin);
+						step.css('left', parseInt((offset.left - hCenter / 2) + options.margin, 10));
 					// Can it go to the left?
 					} else if(offset.left - (stepW + options.margin) > boundary.left) {
-						step.css('left', offset.left - (stepW + options.margin));
+						step.css('left', parseInt(offset.left - (stepW + options.margin), 10));
 						if(!arrowSet) {
 							step.addClass('left');
 						}
@@ -109,7 +107,7 @@
 					//	}
 					// Fallback to boundary limit
 					} else {
-						step.css('left', boundary.left + options.margin);
+						step.css('left', parseInt(boundary.left + options.margin, 10));
 					}
 					
 				break;
@@ -172,6 +170,19 @@
 					settings.container.on('click.chaperone', '.next-chaperone', function() { elem.chaperone('next'); });
 					settings.container.on('click.chaperone', '.prev-chaperone', function() { elem.chaperone('prev'); });
 					settings.container.on('click.chaperone', '.close-chaperone', function() { elem.chaperone('stop'); });
+					if(settings.repositionOnResize) {
+						// we throttle/debounce for performance, though it means
+						// a slightly 'laggy' reposition when constantly resizing
+						// a window
+						var resizeThrottleTimer = null;
+						settings._resize = function() {
+							clearTimeout(resizeThrottleTimer);
+							resizeThrottleTimer = setTimeout(function() {
+								elem.chaperone('reposition');
+							}, 50);
+						};
+						$(window).on('resize.chaperone', settings._resize);
+					}
 				}
 			});
 		},
@@ -215,6 +226,10 @@
 					container = settings.container,
 					currentStep = container.children(':visible');
 
+				// Remove window resize handler if present
+				if(settings.repositionOnResize) {
+					$(window).off('resize.chaperone', settings._resize);
+				}
 				// Hide current step
 				hideStep(elem, currentStep);
 				// Remove the generated steps
@@ -264,6 +279,16 @@
 				hideStep(elem, currentStep);
 				showStep(elem, prevStep);
 			});
+		},
+
+		reposition: function() {
+			return this.each(function() {
+				var elem = $(this),
+					settings = elem.data('chaperone'),
+					container = settings.container,
+					currentStep = container.children(':visible');
+				calculatePosition(elem, currentStep);
+			});
 		}
 
 	};
@@ -304,7 +329,8 @@
 		nextKey: [39, 40, 13, 32],	// Right arrow | Down arrow | Enter | Space
 		prevKey: [37, 38, 8],		// Left arrow | Up arrow | Backspace
 		closeKey: 27,				// Escape
-		keepInsideBoundary: document
+		keepInsideBoundary: document,
+		repositionOnResize: true
 	};
 
 }(jQuery));

@@ -8,8 +8,12 @@
   <!-- Load local QUnit (grunt requires v1.0.0 or newer). -->
   <link rel="stylesheet" href="../libs/qunit/qunit.css" media="screen">
   <script src="../libs/qunit/qunit.js"></script>
+  <!-- Load local sinon -->
+  <script src="../libs/sinon/sinon-1.5.0.js"></script>
+  <script src="../libs/sinon/sinon-qunit-1.0.0.js"></script>
   <!-- Load local lib and tests. -->
   <script src="../src/chaperone.js"></script>
+  <link rel="stylesheet" href="../src/chaperone.css" media="screen">
   <script src="chaperone_test.js"></script>
   <!-- Removing access to jQuery and $. But it'll still be available as _$, if
        you REALLY want to mess around with jQuery in the console. REMEMBER WE
@@ -24,15 +28,21 @@
   <ol id="qunit-tests"></ol>
   <div id="qunit-fixture">
     <ol class="tour">
-      <li data-title="Step 1">This is the <strong>first</strong> step</li>
-      <li>Another step</li>
-      <li>And yet another step</li>
-      <li data-title="The Final Step">Fin.</li>
+      <li data-title="Step 1" data-placement="left" data-target="#target1">This is the <strong>first</strong> step</li>
+      <li data-placement="top" data-target="#target2">Another step</li>
+      <li data-placement="right" data-target="#target3">And yet another step</li>
+      <li data-title="The Final Step" data-placement="bottom" data-target="#target3">Fin.</li>
     </ol>
 
     <ol class="another-tour">
       <li data-title="Another Tour Step">Hello</li>
     </ol>
+
+    <div class="targets">
+      <div id="target1" style="width: 100px; height: 100px; background: #f00; margin-right: 50px;">1</div>
+      <div id="target2" style="width: 100px; height: 100px; background: #0f0; margin-right: 50px;">2</div>
+      <div id="target3" style="width: 100px; height: 100px; background: #00f; margin-right: 50px;">3</div>
+    </div>
   </div>
 </body>
 </html>

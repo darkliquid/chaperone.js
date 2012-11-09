@@ -71,9 +71,6 @@
   <link rel="stylesheet" href="../src/chaperone.css">
   <script src="../src/chaperone.js"></script>
 
-  <script>
-    $.SyntaxHighlighter.init();
-  </script>
 </head>
 <body>
   <div class="navbar navbar-inverse navbar-fixed-top">
@@ -166,8 +163,11 @@
           </div>
           <script>
             $(function(){
+              $.SyntaxHighlighter.init();
               $('#demo1').chaperone();
-              $('#demo1').chaperone('start');
+              setTimeout(function() {
+                $('#demo1').chaperone('start');
+              }, 2000);
             });
           </script>
         </div>

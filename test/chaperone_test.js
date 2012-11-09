@@ -121,7 +121,7 @@
 		ok(this.elems.data('chaperone').container.children().eq(3).is(':visible'), 'last step should be visible');
 	});
 
-	/*
+	
 	module('jQuery#chaperone positioning', {
 		setup: function() {
 			this.elems = $('#qunit-fixture ol.tour');
@@ -130,7 +130,7 @@
 		},
 		teardown: function() {
 			// Cleaning up the steps created in the body tag
-			$('.chaperone-steps').remove();
+			//$('.chaperone-steps').remove();
 		}
 	});
 
@@ -141,7 +141,21 @@
 			'should position first step by it\'s target'
 		);
 	});
-	*/
+
+	test('on resize', function() {
+		var width = $(window).width(),
+			height = $(window).height(),
+			offset = this.elems.data('chaperone').container.children().first().offset();
+
+		window.resizeTo(300, 300);
+
+		var newOffset = this.elems.data('chaperone').container.children().first().offset();
+
+		window.resizeTo(width, height);
+
+		notDeepEqual(newOffset, offset, 'position should be changed');
+	});
+	
 
 	module('jQuery#chaperone events', {
 		setup: function() {
