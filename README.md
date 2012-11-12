@@ -28,7 +28,7 @@ Check out [the documention site](http://darkliquid.github.com/chaperone.js)
 
 ## Examples
 
-There are examples of usage on [the example page](http://darkliquid.github.com/chaperone.js/examples)
+_(Coming soon)_
 
 ## Release History
 _(Nothing yet)_

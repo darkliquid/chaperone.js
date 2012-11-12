@@ -1,5 +1,5 @@
-/*! Chaperone - v0.2.0 - 2012-11-09
-* https://github.com/darkliquid/chaperone.js
+/*! Chaperone - v0.3.0 - 2012-11-12
+* http://darkliquid.github.com/chaperone.js
 * Copyright (c) 2012 Andrew Montgomery-Hurrell; Licensed MIT, GPL */
 
 (function($, undefined) {
@@ -94,20 +94,19 @@
 					}
 
 					// Can we center it?
-					if(stepW < offset.width || offset.left - hCenter > boundary.left) {
+					if(stepW < offset.width) {
 						step.css('left', parseInt((offset.left - hCenter / 2) + options.margin, 10));
 					// Can it go to the left?
-					} else if(offset.left - (stepW + options.margin) > boundary.left) {
+					} else if(!arrowSet && (offset.left - (stepW + options.margin) > boundary.left)) {
 						step.css('left', parseInt(offset.left - (stepW + options.margin), 10));
-						if(!arrowSet) {
-							step.addClass('left');
-						}
+						step.addClass('left');
 					// To the right?
-					//} else if(offset.left + offset.width + stepW + options.margin < boundary.left + boundary.width) {
-					//	step.css('left', offset.left + offset.width + options.margin);
-					//	if(!arrowSet) {
-					//		step.addClass('left');
-					//	}
+					} else if(!arrowSet && (offset.left + offset.width + stepW + options.margin < boundary.left + boundary.width)) {
+						step.css('left', parseInt(offset.left + offset.width + options.margin, 10));
+						step.addClass('right');
+					// Can it be centered within the boundary limits?
+					} else if(offset.left - hCenter > boundary.left) {
+						step.css('left', parseInt((offset.left - hCenter / 2) + options.margin, 10));
 					// Fallback to boundary limit
 					} else {
 						step.css('left', parseInt(boundary.left + options.margin, 10));
@@ -184,7 +183,7 @@
 								elem.chaperone('reposition');
 							}, 50);
 						};
-						$(window).on('resize.chaperone', settings._resize);
+						$(window).on('resize', settings._resize);
 					}
 				}
 			});
@@ -236,7 +235,7 @@
 
 				// Remove window resize handler if present
 				if(settings.repositionOnResize) {
-					$(window).off('resize.chaperone', settings._resize);
+					$(window).off('resize', settings._resize);
 				}
 				// Hide current step
 				hideStep(elem, currentStep);
@@ -296,7 +295,18 @@
 					container = settings.container,
 					currentStep = container.children(':visible');
 				calculatePosition(elem, currentStep);
+				elem.trigger('repositioned.chaperone');
 			});
+		},
+
+		settings: function() {
+			if(this.length > 1) {
+				return this.map(function() {
+					return $(this).data('chaperone');
+				});
+			} else {
+				return this.first().data('chaperone');
+			}
 		}
 
 	};
@@ -333,10 +343,6 @@
 				'</div>',
 			'</div>'
 		].join(''),
-		keyboard: true,
-		nextKey: [39, 40, 13, 32],	// Right arrow | Down arrow | Enter | Space
-		prevKey: [37, 38, 8],		// Left arrow | Up arrow | Backspace
-		closeKey: 27,				// Escape
 		keepInsideBoundary: document,
 		repositionOnResize: true
 	};
