@@ -42,18 +42,19 @@ Inspired by <a href="http://www.zurb.com/playground/jquery-joyride-feature-tour-
 
 <p>In your web page:</p>
 
-<div class="highlight"><pre><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"jquery.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
-<span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"dist/chaperone.min.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+<div class="highlight"><pre><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"jquery.min.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"chaperone.min.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
 <span class="nt">&lt;script&gt;</span>
 <span class="nx">jQuery</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">$</span><span class="p">)</span> <span class="p">{</span>
-  <span class="nx">$</span><span class="p">.</span><span class="nx">chaperone</span><span class="p">(</span><span class="s1">'#my-tour'</span><span class="p">);</span> <span class="c1">// Starts up a default tour based on the info in the #my-tour element</span>
+  <span class="nx">$</span><span class="p">(</span><span class="s1">'#my-tour'</span><span class="p">).</span><span class="nx">chaperone</span><span class="p">();</span>        <span class="c1">// Set up a default tour based on the info in the #my-tour element</span>
+  <span class="nx">$</span><span class="p">(</span><span class="s1">'#my-tour'</span><span class="p">).</span><span class="nx">chaperone</span><span class="p">(</span><span class="s1">'start'</span><span class="p">);</span> <span class="c1">// Start the tour</span>
 <span class="p">});</span>
 <span class="nt">&lt;/script&gt;</span>
 </pre></div>
 
 <h2>Documentation</h2>
 
-<p><em>(Coming soon)</em></p>
+<p>Check out <a href="http://darkliquid.github.com/chaperone.js">the documention site</a></p>
 
 <h2>Examples</h2>
 
