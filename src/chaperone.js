@@ -92,21 +92,14 @@
 					// Can we center it?
 					if(stepW < offset.width) {
 						step.css('left', parseInt((offset.left - hCenter / 2) + options.margin, 10));
-						console.log(offset.left);
-						console.log(hCenter);
-						console.log(boundary.left);
 					// Can it go to the left?
-					} else if(offset.left - (stepW + options.margin) > boundary.left) {
+					} else if(!arrowSet && (offset.left - (stepW + options.margin) > boundary.left)) {
 						step.css('left', parseInt(offset.left - (stepW + options.margin), 10));
-						if(!arrowSet) {
-							step.addClass('left');
-						}
+						step.addClass('left');
 					// To the right?
-					} else if(offset.left + offset.width + stepW + options.margin < boundary.left + boundary.width) {
+					} else if(!arrowSet && (offset.left + offset.width + stepW + options.margin < boundary.left + boundary.width)) {
 						step.css('left', parseInt(offset.left + offset.width + options.margin, 10));
-						if(!arrowSet) {
-							step.addClass('right');
-						}
+						step.addClass('right');
 					// Can it be centered within the boundary limits?
 					} else if(offset.left - hCenter > boundary.left) {
 						step.css('left', parseInt((offset.left - hCenter / 2) + options.margin, 10));
