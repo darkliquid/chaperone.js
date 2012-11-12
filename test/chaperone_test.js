@@ -25,6 +25,7 @@
 	QUnit.config.testTimeout = 500;
 	QUnit.jsDump.HTML = false;
 
+
 	module('jQuery#chaperone', {
 		setup: function() {
 			this.elems = $('#qunit-fixture ol.tour');
@@ -125,8 +126,19 @@
 		ok(this.elems.data('chaperone').container.children().eq(3).is(':visible'), 'last step should be visible');
 	});
 
-	
-	module('jQuery#chaperone positioning', {
+	test('settings', 4, function() {
+		var elems = this.elems;
+		deepEqual(this.elems.chaperone('settings'), this.elems.data('chaperone'), 'should return the settings for the chaperoned element');
+		this.elems2 = $('#qunit-fixture ol.another-tour');
+		this.elems2.chaperone();
+		equal($('#qunit-fixture ol.tour, #qunit-fixture ol.another-tour').chaperone('settings').length, 2, 'should have 2 elements');
+		deepEqual($('#qunit-fixture ol.tour, #qunit-fixture ol.another-tour').chaperone('settings')[0], this.elems.data('chaperone'), 'first element should have first settings');
+		deepEqual($('#qunit-fixture ol.tour, #qunit-fixture ol.another-tour').chaperone('settings')[1], this.elems2.data('chaperone'), 'second element should have second settings');
+		this.elems2.chaperone('destroy');
+	});
+
+
+	module('jQuery#chaperone placements', {
 		setup: function() {
 			this.elems = $('#qunit-fixture ol.tour');
 			this.elems.chaperone();
@@ -163,6 +175,7 @@
 		var chaperone = this.elems.data('chaperone').container.children().eq(1);
 		ok(chaperone.offset().top > $('#target3').offset().top + $('#target3').height(), 'should be positioned below target');
 	});
+
 
 	module('jQuery#chaperone events', {
 		setup: function() {
@@ -219,6 +232,7 @@
 		this.elems.chaperone('reposition');
 	});
 
+
 	module('jQuery#chaperone steps', {
 		setup: function() {
 			this.elems = $('#qunit-fixture ol.tour');
@@ -268,25 +282,63 @@
 		step.find('.close-chaperone').click();
 	});
 
-	/*
-	module('jQuery#chaperone options', {
+
+	module('jQuery#chaperone boundary contraints/auto positioning', {
 		setup: function() {
-			this.elems = $('#qunit-fixture ol.tour');
-			this.elems.chaperone();
+			this.elems = $('#qunit-fixture ol.another-tour');
+			$('.targets').css('padding', 0);
+			this.elems.chaperone({ keepInsideBoundary: '.targets' });
+			this.elems.chaperone('start');
 		},
 		teardown: function() {
-			// Cleaning up the steps created in the body tag
+			this.elems.chaperone('destroy');
 			$('.chaperone-steps').remove();
 		}
 	});
-	*/
+
+	test('auto-positioning in contrained box', 4, function() {
+		var step = this.elems.data('chaperone').container.children().eq(0);
+		ok(!step.hasClass('left'), 'should not have left class');
+		ok(!step.hasClass('right'), 'should not have right class');
+		ok(!step.hasClass('top'), 'should not have top class');
+		ok(!step.hasClass('bottom'), 'should not have bottom class');
+	});
+
+	test('auto-positioning with free space above', 1, function() {
+		var step = this.elems.data('chaperone').container.children().eq(0);
+		$('.targets').css('padding-top', 500);
+		this.elems.chaperone('reposition');
+		ok(step.hasClass('top'), 'should have top class');
+	});
+
+	test('auto-positioning with free space left', 1, function() {
+		var step = this.elems.data('chaperone').container.children().eq(0);
+		$('.targets').css({ 'padding-left': 500, 'width': 1000 });
+		this.elems.chaperone('reposition');
+		ok(step.hasClass('left'), 'should have left class');
+	});
+
+
+	test('auto-positioning with free space right', 1, function() {
+		var step = this.elems.data('chaperone').container.children().eq(0);
+		$('.targets').css({ 'padding-right': 500, 'width': 1000 });
+		this.elems.chaperone('reposition');
+		ok(step.hasClass('right'), 'should have right class');
+	});
+
+	test('auto-positioning with free space below', 1, function() {
+		var step = this.elems.data('chaperone').container.children().eq(0);
+		$('.targets').css('height', 500);
+		this.elems.chaperone('reposition');
+		ok(step.hasClass('bottom'), 'should have bottom class');
+	});
 
 	// Hack to add in 'test' for actually running tests that require child windows, such as the resize event.
 	if ( !window.opener ) {
 		QUnit.done(function() {
 			$('#qunit-tests')
-			.append('<li class="fail"><strong><span class="module-name">jQuery#chaperone window resize</span>: <b class="failed">This module can only work in a child window.</b></strong><a>Click to run tests</a></li>')
-			.find('a')
+			.append('<li class="fail"><strong><span class="module-name">jQuery#chaperone window resize</span>: <b class="failed">This module can only work in a child window.</b></strong><a id="external-tests">Click to run tests</a></li>')
+			.find('a#external-tests')
 			.click(function(){
 				window.open( location.href, 'win', 'width=800,height=600,scrollbars=1,resizable=1' );
 				return false;
