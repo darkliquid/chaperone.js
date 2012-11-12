@@ -11,8 +11,12 @@ Chaperone takes a list of items and uses them as a guide to show messages on tar
 ## Getting Started
 Download the [production version][min] or the [development version][max].
 
-[min]: https://raw.github.com/darkliquid/chaperone/master/dist/chaperone.min.js
-[max]: https://raw.github.com/darkliquid/chaperone/master/dist/chaperone.js
+[min]: https://raw.github.com/darkliquid/chaperone.js/master/dist/chaperone.min.js
+[max]: https://raw.github.com/darkliquid/chaperone.js/master/dist/chaperone.js
+
+Also, if you don't want to make your own styles, you'll also want the [stylesheet][css]
+
+[css]: https://raw.github.com/darkliquid/chaperone.js/master/src/chaperone.css
 
 In your web page:
 
