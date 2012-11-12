@@ -23,6 +23,7 @@
 	*/
 
 	QUnit.config.testTimeout = 500;
+	QUnit.jsDump.HTML = false;
 
 	module('jQuery#chaperone', {
 		setup: function() {
@@ -163,17 +164,6 @@
 		ok(chaperone.offset().top > $('#target3').offset().top + $('#target3').height(), 'should be positioned below target');
 	});
 
-	/*
-	// For some reason this isn't working, but the code __does__ work, so it's somethign in qunit or something?
-	asyncTest('window resize', 1, function() {
-		this.elems.on('repositioned.chaperone', function() {
-			ok(true, 'should fire get repositioned on window resize');
-			start();
-		});
-		$(window).trigger('resize');
-	});
-	*/
-
 	module('jQuery#chaperone events', {
 		setup: function() {
 			this.elems = $('#qunit-fixture ol.tour');
@@ -290,5 +280,41 @@
 		}
 	});
 	*/
+
+	// Hack to add in 'test' for actually running tests that require child windows, such as the resize event.
+	if ( !window.opener ) {
+		QUnit.done(function() {
+			$('#qunit-tests')
+			.append('<li class="fail"><strong><span class="module-name">jQuery#chaperone window resize</span>: <b class="failed">This module can only work in a child window.</b></strong><a>Click to run tests</a></li>')
+			.find('a')
+			.click(function(){
+				window.open( location.href, 'win', 'width=800,height=600,scrollbars=1,resizable=1' );
+				return false;
+			});
+		});
+	} else {
+		$('#qunit-header a').attr( 'target', '_blank' );
+
+		module('jQuery#chaperone window resize', {
+			setup: function() {
+				this.elems = $('#qunit-fixture ol.tour');
+				this.elems.chaperone();
+			},
+			teardown: function() {
+				// Cleaning up the steps created in the body tag
+				$('.chaperone-steps').remove();
+			}
+		});
+
+		// For some reason this isn't working, but the code __does__ work, so it's something in qunit I guess?
+		asyncTest('on resize event should reposition steps', 1, function() {
+			this.elems.on('repositioned.chaperone', function() {
+				ok(true, 'should fire get repositioned on window resize');
+				start();
+			});
+			$(window).trigger('resize');
+		});
+
+	}
 
 }(jQuery));
