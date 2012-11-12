@@ -12,20 +12,23 @@ Download the [production version][min] or the [development version][max].
 In your web page:
 
 ```html
-<script src="jquery.js"></script>
-<script src="dist/chaperone.min.js"></script>
+<script src="jquery.min.js"></script>
+<script src="chaperone.min.js"></script>
 <script>
 jQuery(function($) {
-  $.chaperone('#my-tour'); // Starts up a default tour based on the info in the #my-tour element
+  $('#my-tour').chaperone(); 		// Set up a default tour based on the info in the #my-tour element
+  $('#my-tour').chaperone('start'); // Start the tour
 });
 </script>
 ```
 
 ## Documentation
-_(Coming soon)_
+
+Check out [the documention site](http://darkliquid.github.com/chaperone.js)
 
 ## Examples
-_(Coming soon)_
+
+There are examples of usage on [the example page](http://darkliquid.github.com/chaperone.js/examples)
 
 ## Release History
 _(Nothing yet)_
