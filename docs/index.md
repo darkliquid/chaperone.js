@@ -162,7 +162,7 @@ Set this to a valid jQuery selector and the tooltip/message will be displayed by
 
 #### placement
 
-Valid options are __left, right, top, bottom__ and __auto__. If not set, the value defaults to auto.
+> Valid options are __left, right, top, bottom__ and __auto__. If not set, the value defaults to auto.
 
 This controls how the placement of tooltips/messages is determined. In auto mode, the tooltip/message will get placed 
 wherever there is room around the target, starting from __top center__ and then trying other combinations until one works, finally settling on 
