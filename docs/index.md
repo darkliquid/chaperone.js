@@ -139,8 +139,8 @@ The cue card is hidden when the chaperone is activated and each step transformed
 __Examples__
 {% highlight html %}
 <ol id="example-cue-card-1">
-  <li data-target="h1.something" data-placement="top"></li>
-  <li data-target="#something" data-placement="left"></li>
+  <li data-target="h1.something" data-placement="top" data-title="Title for content">Some content</li>
+  <li data-target="#something" data-placement="left">Content without a title</li>
 </ol>
 
 <div id="example-cue-card-2">
@@ -168,6 +168,12 @@ This controls how the placement of tooltips/messages is determined. In auto mode
 wherever there is room around the target, starting from __top center__ and then trying other combinations until one works, finally settling on 
 centering over the target if nothing else works. The other options force the tooltip/message to position themselves at those offsets regardless 
 of room, which can result in them appearing off-screen.
+
+#### title
+
+> If not set, no title is shown
+
+This sets the text that will show in the title portion of the step template.
 
 ## Instructing the Chaperone
 
