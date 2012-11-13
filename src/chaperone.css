@@ -30,6 +30,7 @@
 .chaperone .close-chaperone {
 	float: right;
 	margin: 7px;
+	margin-top: -4px;
 	font-size: 26px;
 	font-weight: bold;
 	cursor: pointer;
@@ -53,6 +54,7 @@
 	text-align: center;
 	cursor: pointer;
 	text-transform: uppercase;
+	clear: right;
 }
 
 .chaperone .prev-chaperone:hover,
