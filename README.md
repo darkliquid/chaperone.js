@@ -31,7 +31,7 @@ Check out [the documention site](http://darkliquid.github.com/chaperone.js)
 _(Coming soon)_
 
 ## Release History
-_(Nothing yet)_
+__0.3.0__ - First release
 
 ## License
 Copyright (c) 2012 Andrew Montgomery-Hurrell  
