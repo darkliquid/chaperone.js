@@ -111,6 +111,11 @@ A tag with this class will move the chaperone back a step when clicked
 
 A tag with this class will move the chaperone forward a step when clicked
 
+###### Extra classes
+
+When the tooltip/message is shown, the template's out-most element may also have a class of __left, right, top__ or __bottom__
+placed on it depending on the current steps placement settings.
+
 ### keepInsideBoundary
 
 > __Default:__ document
@@ -128,6 +133,42 @@ This defines whether or not the chaperone will try and reposition it's steps aft
 
 The cue card is the list of instructions the chaperone follows that tells him where to lead the user and what to tell them when they get there.
 
+Typically cue cards are written using ol tags, where each li represents a step, but this can be customised to support any markup.
+The cue card is hidden when the chaperone is activated and each step transformed into a tooltip/message.
+
+__Examples__
+{% highlight html %}
+<ol id="example-cue-card-1">
+  <li data-target="h1.something" data-placement="top"></li>
+  <li data-target="#something" data-placement="left"></li>
+</ol>
+
+<div id="example-cue-card-2">
+  <span data-target="h1.something" data-placement="top"></span>
+  <span data-target="#something" data-placement="left"></span>
+</div>
+{% endhighlight %}
+
+You'll notice on each step are a couple of options set via _data_ attributes. These define basic behaviour for the step, the most important of these
+is __target__.
+
+### Data Attributes
+
+#### target
+
+> This attribute is mandatory. Without it, this step will not display correctly.
+
+Set this to a valid jQuery selector and the tooltip/message will be displayed by the matching element.
+
+#### placement
+
+Valid options are __left, right, top, bottom__ and __auto__. If not set, the value defaults to auto.
+
+This controls how the placement of tooltips/messages is determined. In auto mode, the tooltip/message will get placed 
+wherever there is room around the target, starting from __top center__ and then trying other combinations until one works, finally settling on 
+centering over the target if nothing else works. The other options force the tooltip/message to position themselves at those offsets regardless 
+of room, which can result in them appearing off-screen.
+
 ## Instructing the Chaperone
 
 The chaperone will accept a number of instructions to control it's actions or ask it's status.
@@ -140,7 +181,7 @@ $('#my-tour').chaperone('my_command')
 
 ### start
 
-> Fires the _started_ andm _showstep_ events
+> Fires the _started_ and _showstep_ events
 
 Sending this command starts the chaperone on his tour. If he is already on a tour, this will reset him to the beginning.
 
