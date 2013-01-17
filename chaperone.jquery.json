@@ -1,8 +1,8 @@
 {
-  "name": "chaperone",
+  "name": "jquery.chaperone",
   "title": "Chaperone",
   "description": "A simple jQuery plugin for doing guided tours through a website.",
-  "version": "0.3.0",
+  "version": "1.0.0",
   "homepage": "http://darkliquid.github.com/chaperone.js",
   "author": {
     "name": "Andrew Montgomery-Hurrell",

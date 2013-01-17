@@ -122,12 +122,12 @@
 				scrollLeft: step.offset().left - $(window).width() / 2
 			});
 		}
-		elem.trigger('showstep.chaperone', [step.get(0)]);
+		elem.trigger('showstep.chaperone', [step.get(0), step.data('target')]);
 	}
 
 	function hideStep(elem, step) {
 		step.hide();
-		elem.trigger('hidestep.chaperone', [step.get(0)]);
+		elem.trigger('hidestep.chaperone', [step.get(0), step.data('target')]);
 	}
 
 	var methods = {
