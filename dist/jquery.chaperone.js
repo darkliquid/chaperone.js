@@ -1,4 +1,4 @@
-/*! Chaperone.js - v1.0.2 - 2013-01-17
+/*! Chaperone.js - v1.0.3 - 2013-01-17
 * http://darkliquid.github.com/chaperone.js
 * Copyright (c) 2013 Andrew Montgomery-Hurrell; Licensed MIT, GPL */
 
