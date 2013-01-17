@@ -28,7 +28,7 @@ Check out [the documention site](http://darkliquid.github.com/chaperone.js)
 
 ## Examples
 
-_(Coming soon)_
+Check out [the examples](http://darkliquid.github.com/chaperone.js/examples)
 
 ## Release History
 __0.3.0__ - First release
