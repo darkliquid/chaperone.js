@@ -41,7 +41,7 @@ Check out [the documention page](docs)
 Check out [the examples page](examples)
 
 ## Release History
-__1.0.0__ - Now used in production  
+__1.0.3__ - Now used in production  
 __0.3.0__ - First release
 
 ## License
